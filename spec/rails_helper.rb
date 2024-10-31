@@ -44,6 +44,12 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  # Cleanup the DB before testing
+  config.before(:suite) do
+    DatabaseCleaner[:active_record].strategy = :truncation
+    DatabaseCleaner.clean
+  end
+
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 
