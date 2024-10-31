@@ -59,3 +59,7 @@ end
 gem "devise", "~> 4.9"
 
 gem "pg", "~> 1.5"
+
+gem "factory_bot_rails", "~> 6.4", :groups => [:test, :development]
+
+gem "rspec", "~> 3.13", :groups => [:test, :development]
