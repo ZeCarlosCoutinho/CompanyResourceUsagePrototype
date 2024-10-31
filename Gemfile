@@ -62,4 +62,4 @@ gem "pg", "~> 1.5"
 
 gem "factory_bot_rails", "~> 6.4", :groups => [:test, :development]
 
-gem "rspec", "~> 3.13", :groups => [:test, :development]
+gem "rspec-rails", "~> 7.0", :groups => [:test, :development]
