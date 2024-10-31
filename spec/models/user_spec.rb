@@ -15,5 +15,12 @@ RSpec.describe 'User' do
     it 'generates a valid user' do
       expect(FactoryBot.create(:user)).to be_valid
     end
+
+    it 'generates a different email per user' do
+      user1 = FactoryBot.create(:user)
+      user2 = FactoryBot.create(:user)
+
+      expect(user1.email).not_to eq(user2.email)
+    end
   end
 end
