@@ -10,7 +10,10 @@ RSpec.describe 'Profile' do
   describe 'validations' do
     describe 'name' do
       it 'is not an empty string' do
-        #invalid_profile = FactoryBot.build(:profile, name: '')
+        invalid_profile = FactoryBot.build(:profile, name: '')
+        expect(invalid_profile.name).to eq('')
+        expect(invalid_profile).to_not be_valid
+        expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it 'should not be null' do
