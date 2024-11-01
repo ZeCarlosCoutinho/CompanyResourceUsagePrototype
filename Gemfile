@@ -55,3 +55,13 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "devise", "~> 4.9"
+
+gem "pg", "~> 1.5"
+
+gem "factory_bot_rails", "~> 6.4", groups: [ :test, :development ]
+
+gem "rspec-rails", "~> 7.0", groups: [ :test, :development ]
+
+gem "database_cleaner-active_record", "~> 2.2", groups: [ :test, :development ]
