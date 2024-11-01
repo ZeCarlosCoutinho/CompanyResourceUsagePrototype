@@ -56,13 +56,19 @@ RSpec.describe 'Profile' do
       end
       
       it 'is unique' do
-        pending
+        user1 = FactoryBot.create(:user)
+
+        valid_profile = FactoryBot.build(:profile, user: user1)
+        expect(valid_profile).to be_valid
+        expect { valid_profile.save! }.to_not raise_error
+
+        invalid_profile = FactoryBot.build(:profile, user: user1)
+        expect(invalid_profile).to_not be_valid
+        expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
   end
 
-    # Must have a name
-  # Name must have 1 or more strings
-  # Must have a is_manager
-  # Must have an associated user
+  # TODO Should be deleted if the associated user is deleted
+  # TODO Should delete the user if the profile is deleted
 end
