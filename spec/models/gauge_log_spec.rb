@@ -19,4 +19,37 @@ RSpec.describe GaugeLog, type: :model do
       end
     end
   end
+
+  describe 'approve!' do
+    subject { FactoryBot.create(:gauge_log) }
+
+    context 'when the approving profile is a employee' do
+      let(:employee) { FactoryBot.create(:profile, is_manager: false) }
+
+      it 'does not do anything' do
+        subject.approve!(employee)
+
+        expect(subject.approved_by).to be_nil
+      end
+
+      it 'returns false' do
+        expect(subject.approve!(employee)).to eq(false)
+      end
+    end
+
+    context 'when the approving profile is a manager' do
+      let(:manager) { FactoryBot.create(:profile, is_manager: true) }
+
+      it 'adds the profile as the approver' do
+        subject.approve!(manager)
+
+        expect(subject.approved_by).to be(manager)
+      end
+
+      it 'returns true' do
+        expect(subject.approve!(manager)).to eq(true)
+      end
+    end
+  end
+
 end
