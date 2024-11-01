@@ -34,7 +34,13 @@ RSpec.describe 'Profile' do
 
     describe 'is_manager' do
       it 'is not null' do
-        pending
+        invalid_profile = FactoryBot.build(:profile, is_manager: nil)
+        expect(invalid_profile).to_not be_valid
+        expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+
+        valid_profile = FactoryBot.build(:profile, is_manager: false)
+        expect(valid_profile).to be_valid
+        expect { valid_profile.save! }.to_not raise_error
       end
     end
 
