@@ -54,7 +54,7 @@ RSpec.describe 'Profile' do
         expect(valid_profile).to be_valid
         expect { valid_profile.save! }.to_not raise_error
       end
-      
+
       it 'is unique' do
         user1 = FactoryBot.create(:user)
 
