@@ -14,6 +14,10 @@ RSpec.describe 'Profile' do
         expect(invalid_profile.name).to eq('')
         expect(invalid_profile).to_not be_valid
         expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+
+        valid_profile = FactoryBot.build(:profile, name: 'valid name')
+        expect(valid_profile).to be_valid
+        expect { valid_profile.save! }.to_not raise_error
       end
 
       it 'should not be null' do
@@ -21,6 +25,10 @@ RSpec.describe 'Profile' do
         expect(invalid_profile.name).to be_nil
         expect(invalid_profile).to_not be_valid
         expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+
+        valid_profile = FactoryBot.build(:profile, name: 'valid name')
+        expect(valid_profile).to be_valid
+        expect { valid_profile.save! }.to_not raise_error
       end
     end
 
