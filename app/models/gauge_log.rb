@@ -1,3 +1,4 @@
+# A Gauge Log represents an individual measurement that was recorded by an employee relative to a certain gauge
 class GaugeLog < ApplicationRecord
   belongs_to :gauge
   belongs_to :filled_in_by, class_name: "Profile"
