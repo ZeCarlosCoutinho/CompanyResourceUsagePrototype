@@ -7,6 +7,7 @@ class CreateGaugeLogs < ActiveRecord::Migration[7.2]
       t.belongs_to :approved_by, foreign_key: { to_table: :profiles }
 
       t.numeric :value, null: false
+      t.date :date, null: false
     end
   end
 end
