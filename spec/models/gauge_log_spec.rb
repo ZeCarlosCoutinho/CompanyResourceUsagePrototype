@@ -18,6 +18,29 @@ RSpec.describe GaugeLog, type: :model do
         expect(also_valid_log).to be_valid
       end
     end
+
+    context 'when a gauge log already exists for a given time slot' do
+      let(:gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
+      let(:other_gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
+      let(:date) { Date.today }
+      let(:other_date) { Date.yesterday }
+      let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: gauge, date: date) }
+
+      it 'invalidates a gauge created for the same time slot and the same gauge' do
+        invalid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: date)
+        expect(invalid_log).to_not be_valid
+        expect(invalid_log.errors[:date]).to match_array([ "There already exists a gauge_log for this date in the selected gauge" ])
+
+
+        valid_log = FactoryBot.build(:gauge_log, gauge: other_gauge, date: date)
+        expect(valid_log).to be_valid
+
+        also_valid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: other_date)
+        expect(also_valid_log).to be_valid
+      end
+    end
+
+    # TODO Cannot be outside the start and end date
   end
 
   describe 'approve!' do
@@ -51,5 +74,4 @@ RSpec.describe GaugeLog, type: :model do
       end
     end
   end
-
 end
