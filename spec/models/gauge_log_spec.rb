@@ -38,6 +38,14 @@ RSpec.describe GaugeLog, type: :model do
           also_valid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: other_date)
           expect(also_valid_log).to be_valid
         end
+
+        it 'is valid for the gauge log that already exists' do
+          expect(gauge_log1).to be_valid
+
+          invalid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: date)
+          expect(invalid_log).to_not be_valid
+          expect(invalid_log.errors[:date]).to match_array([ "There already exists a gauge_log for this date in the selected gauge" ])
+        end
       end
 
       it 'must fall between the start and end date of the associated gauge' do

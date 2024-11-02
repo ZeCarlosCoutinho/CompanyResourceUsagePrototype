@@ -18,7 +18,8 @@ class GaugeLog < ApplicationRecord
   private
 
   def no_duplicates
-    return unless gauge.gauge_logs.find_by(date: date)
+    other_gauge_logs = gauge.gauge_logs.where.not(id: id)
+    return unless other_gauge_logs.find_by(date: date)
 
     errors.add(:date, "There already exists a gauge_log for this date in the selected gauge")
   end
