@@ -1,6 +1,8 @@
 # The Gauge represents a gauge of the company, which stores several measurements of a certain resource
 # along fixed periods of time.
 class Gauge < ApplicationRecord
+  has_many :gauge_logs
+
   enum time_slot: [ :daily, :weekly, :monthly, :yearly ]
 
   validates :unit, presence: true
