@@ -7,6 +7,7 @@ class GaugeLog < ApplicationRecord
   validates :date, presence: true
 
   validate :no_duplicates
+  validate :respects_the_gauge_date_range
 
   def approve!(profile)
     return false unless profile.is_manager
@@ -20,5 +21,11 @@ class GaugeLog < ApplicationRecord
     return unless gauge.gauge_logs.find_by(date: date)
 
     errors.add(:date, "There already exists a gauge_log for this date in the selected gauge")
+  end
+
+  def respects_the_gauge_date_range
+    return if date >= gauge.start_date && date <= gauge.end_date
+
+    errors.add(:date, "Date must fall between the gauge\'s start and end date")
   end
 end

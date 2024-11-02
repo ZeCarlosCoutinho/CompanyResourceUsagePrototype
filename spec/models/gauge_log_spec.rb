@@ -21,8 +21,8 @@ RSpec.describe GaugeLog, type: :model do
 
     describe 'date' do
       context 'when a gauge log already exists for a given time slot' do
-        let(:gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
-        let(:other_gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
+        let!(:gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
+        let!(:other_gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
         let(:date) { Date.today }
         let(:other_date) { Date.yesterday }
         let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: gauge, date: date) }
@@ -32,13 +32,30 @@ RSpec.describe GaugeLog, type: :model do
           expect(invalid_log).to_not be_valid
           expect(invalid_log.errors[:date]).to match_array([ "There already exists a gauge_log for this date in the selected gauge" ])
 
-
           valid_log = FactoryBot.build(:gauge_log, gauge: other_gauge, date: date)
           expect(valid_log).to be_valid
 
           also_valid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: other_date)
           expect(also_valid_log).to be_valid
         end
+      end
+
+      it 'must fall between the start and end date of the associated gauge' do
+        gauge = FactoryBot.create(:gauge, start_date: Date.yesterday, end_date: Date.today)
+        valid_date = Date.today
+        invalid_date = Date.tomorrow
+        also_invalid_date = 2.days.ago
+
+        invalid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: invalid_date)
+        expect(invalid_log).to_not be_valid
+        expect(invalid_log.errors[:date]).to match_array([ "Date must fall between the gauge\'s start and end date" ])
+
+        also_invalid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: also_invalid_date)
+        expect(also_invalid_log).to_not be_valid
+        expect(also_invalid_log.errors[:date]).to match_array([ "Date must fall between the gauge\'s start and end date" ])
+
+        valid_log = FactoryBot.build(:gauge_log, gauge: gauge, date: valid_date)
+        expect(valid_log).to be_valid
       end
     end
   end
