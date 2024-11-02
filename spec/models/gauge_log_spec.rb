@@ -21,10 +21,12 @@ RSpec.describe GaugeLog, type: :model do
 
     describe 'date' do
       context 'when a gauge log already exists for a given time slot' do
-        let!(:gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
-        let!(:other_gauge) { FactoryBot.create(:gauge, time_slot: Gauge.time_slots[:daily]) }
         let(:date) { Date.today }
         let(:other_date) { Date.yesterday }
+        let(:time_slot_type) { Gauge.time_slots[:daily] }
+
+        let!(:gauge) { FactoryBot.create(:gauge, time_slot: time_slot_type, start_date: other_date, end_date: date) }
+        let!(:other_gauge) { FactoryBot.create(:gauge, time_slot: time_slot_type, start_date: other_date, end_date: date) }
         let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: gauge, date: date) }
 
         it 'is invalid' do
