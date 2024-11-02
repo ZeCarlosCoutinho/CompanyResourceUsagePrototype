@@ -3,7 +3,12 @@
 class Gauge < ApplicationRecord
   has_many :gauge_logs
 
-  enum time_slot: [ :daily, :weekly, :monthly, :yearly ]
+  enum time_slot: {
+    daily: "daily",
+    weekly: "weekly",
+    monthly: "monthly",
+    yearly: "yearly"
+  }
 
   validates :unit, presence: true
   validates :time_slot, presence: true
