@@ -12,4 +12,5 @@
     </tr>
     <%= render partial: "gauge_log", collection: @gauge.gauge_logs, locals: { profile: @profile } %>
   </table>
+  <%= render partial: 'add_gauge_log_form', locals: { gauge_id: @gauge.id } %>
 </div>

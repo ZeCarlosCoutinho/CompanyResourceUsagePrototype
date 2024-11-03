@@ -1,0 +1,11 @@
+<%= form_with model: GaugeLog.new, url: "/gauge_log/create" do |form| %>
+  <%= form.label :value %>
+  <%= form.number_field :value, id: 'add-value-input' %>
+
+  <%= form.label :date %>
+  <%= form.date_field :date, id: 'add-date-input' %>
+
+  <%= form.hidden_field :gauge_id, value: gauge_id %>
+
+  <%= form.submit "Add" %>
+<% end %>
