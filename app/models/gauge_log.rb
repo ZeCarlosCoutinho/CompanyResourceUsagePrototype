@@ -23,6 +23,8 @@ class GaugeLog < ApplicationRecord
   private
 
   def no_duplicates
+    return if gauge.blank? # Cannot validate for duplicates
+
     other_gauge_logs = gauge.gauge_logs.where.not(id: id)
     return unless other_gauge_logs.find_by(date: date)
 
@@ -30,6 +32,7 @@ class GaugeLog < ApplicationRecord
   end
 
   def respects_the_gauge_date_range
+    return if gauge.blank? # Cannot validate for the gauge dates
     return if date >= gauge.start_date && date <= gauge.end_date
 
     errors.add(:date, "Date must fall between the gauge\'s start and end date")
