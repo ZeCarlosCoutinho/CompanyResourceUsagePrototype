@@ -31,8 +31,8 @@ class GaugeLogController < ApplicationController
     return head :not_found if gauge_log.blank?
     return head :bad_request if gauge_log.approved?
 
-    gauge_log.value = update_params[:value]
-    gauge_log.date = update_params[:date]
+    gauge_log.value = update_params[:value].to_f
+    gauge_log.date = Date.parse(update_params[:date])
     return head :bad_request unless gauge_log.valid?
 
     gauge_log.save!
