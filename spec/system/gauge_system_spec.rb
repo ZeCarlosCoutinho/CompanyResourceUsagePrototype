@@ -25,4 +25,19 @@ RSpec.describe "Gauges management", type: :system do
       expect(page).to have_text(gauge2.end_date.to_fs)
     end
   end
+
+  context 'if I am an employee' do
+    let(:employee) { FactoryBot.create(:profile, is_manager: false) }
+
+    before(:each) { sign_in(employee.user) }
+
+    it 'allows me to create a new gauge' do
+      visit '/gauge/index'
+
+      expect(page).to have_link('New Gauge', href: '/gauge/new')
+      click_link 'New Gauge'
+
+      expect(page).to have_current_path('/gauge/new')
+    end
+  end
 end
