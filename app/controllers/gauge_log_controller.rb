@@ -29,6 +29,7 @@ class GaugeLogController < ApplicationController
     gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
 
     return head :not_found if gauge_log.blank?
+    return head :bad_request if gauge_log.approved?
 
     gauge_log.value = update_params[:value]
     gauge_log.date = update_params[:date]

@@ -229,6 +229,22 @@ RSpec.describe GaugeLogController, type: :controller do
             .and(not_change { target_gauge_log.reload.date })
         end
       end
+
+      context 'and it tries to update a log that is already approved' do
+        before(:each) do
+          target_gauge_log.approve!(FactoryBot.create(:manager))
+        end
+
+        it 'returns a 400' do
+          subject
+          expect(response.status).to eq(400)
+        end
+
+        it 'does not update the log' do
+          expect { subject }.to not_change { target_gauge_log.reload.value }
+            .and(not_change { target_gauge_log.reload.date })
+        end
+      end
     end
 
     context 'when the user is a manager' do
