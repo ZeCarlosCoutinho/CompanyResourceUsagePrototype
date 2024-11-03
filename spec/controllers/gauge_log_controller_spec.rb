@@ -62,6 +62,7 @@ RSpec.describe GaugeLogController, type: :controller do
     let(:start_date) { 1.month.ago }
     let(:end_date) { Date.today.next_month }
     let(:gauge) { FactoryBot.create(:gauge, start_date: start_date, end_date: end_date) }
+    let(:gauge_id) { gauge.id }
 
     let(:value) { 41 }
     let(:date) { Date.today }
@@ -71,7 +72,7 @@ RSpec.describe GaugeLogController, type: :controller do
         gauge_log: {
           value: value,
           date: date,
-          gauge_id: gauge.id
+          gauge_id: gauge_id
         }
       }
     end
@@ -92,8 +93,21 @@ RSpec.describe GaugeLogController, type: :controller do
         expect(created_gauge_log.gauge.id).to eq(gauge.id)
       end
 
-      context 'when the params are invalid' do
+      context 'when the date is invalid' do
         let(:date) { start_date - 1.month }
+
+        it 'returns a 400' do
+          subject
+          expect(response.status).to eq(400)
+        end
+
+        it 'does not create the gauge log' do
+          expect { subject }.not_to change(GaugeLog, :count)
+        end
+      end
+
+      context 'when the associated gauge does not exist' do
+        let(:gauge_id) { -1 }
 
         it 'returns a 400' do
           subject
