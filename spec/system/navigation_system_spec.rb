@@ -25,4 +25,14 @@ RSpec.describe "Navigation", type: :system do
       expect { click_link "Back" }.to change(page, :current_path).to("/gauge/index")
     end
   end
+
+  context 'when I am in the gauge page' do
+    let!(:gauge) { FactoryBot.create(:gauge) }
+    it 'allows me to go back to the gauge list' do
+      visit "/gauge/show?id=#{gauge.id}"
+
+      expect(page).to have_link("Back")
+      expect { click_link "Back" }.to change(page, :current_path).to("/gauge/index")
+    end
+  end
 end
