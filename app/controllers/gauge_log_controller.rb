@@ -1,7 +1,7 @@
 class GaugeLogController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_managers, only: :approve
-  before_action :disallow_non_employees, only: :create
+  before_action :disallow_non_employees, only: %i[create update]
 
   def create
     new_gauge_log = GaugeLog.new(
@@ -26,6 +26,16 @@ class GaugeLogController < ApplicationController
   end
 
   def update
+    gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
+
+    return head :not_found if gauge_log.blank?
+    return head :bad_request if gauge_log.approved?
+
+    gauge_log.value = update_params[:value].to_f
+    gauge_log.date = Date.parse(update_params[:date])
+    return head :bad_request unless gauge_log.valid?
+
+    gauge_log.save!
   end
 
   private
@@ -36,6 +46,10 @@ class GaugeLogController < ApplicationController
 
   def approve_params
     params.permit(:id)
+  end
+
+  def update_params
+    params.require(:gauge_log).permit(:value, :date, :id)
   end
 
   def disallow_non_managers

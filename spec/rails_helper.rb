@@ -40,6 +40,10 @@ Capybara.register_driver :rack_test do |app|
   Capybara::RackTest::Driver.new(app, headers: { 'HTTP_USER_AGENT' => 'Capybara' })
 end
 
+# Define a negated matcher, so we can chain multiple ".to_not change"
+RSpec::Matchers.define_negated_matcher :not_change, :change
+
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [

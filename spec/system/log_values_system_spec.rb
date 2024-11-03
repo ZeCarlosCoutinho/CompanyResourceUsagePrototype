@@ -45,6 +45,15 @@ RSpec.describe "Value Logging", type: :system do
       fill_in "add-date-input", with: chosen_date.to_fs
       expect { click_button("Add") }.to_not change(GaugeLog, :count)
     end
+
+    it 'allows me to change a previously logged value' do
+      visit "/gauge/show?id=#{target_gauge.id}"
+
+      chosen_value = 100.5
+      chosen_date = existing_date
+      fill_in "value-input-#{existing_log.id}", with: chosen_value
+      expect { click_button("Update") }.to change { existing_log.reload.value }.to(chosen_value)
+    end
   end
 
   context 'if I am a manager' do
@@ -56,6 +65,13 @@ RSpec.describe "Value Logging", type: :system do
       expect(page).to_not have_field("add-value-input", type: 'number')
       expect(page).to_not have_field("add-date-input", type: 'date')
       expect(page).to_not have_button("Add")
+    end
+
+    it 'does not allow me to edit a value for a log' do
+      visit "/gauge/show?id=#{target_gauge.id}"
+
+      # TODO This test is not very specific, we should improve it in the future
+      expect(page).to_not have_button("Update")
     end
   end
 end

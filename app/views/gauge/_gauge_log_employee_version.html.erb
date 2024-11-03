@@ -1,0 +1,14 @@
+<% if gauge_log.approved? %>
+  <td><%= gauge_log.date.to_fs %></td>
+  <td><%= gauge_log.value %></td>
+  <td><%= "Approved by #{gauge_log.approved_by.name}" %></td>
+  <td></td>
+<% else %>
+  <%= form_with model: gauge_log, url: "/gauge_log/update" do |form| %>
+    <%= form.hidden_field :id %>
+    <td><%= form.date_field :date , id: "date-input-#{gauge_log.id}"%></td>
+    <td><%= form.number_field :value, id: "value-input-#{gauge_log.id}" %></td>
+    <td></td>
+    <td><%= form.submit "Update" %></td>
+  <% end %>
+<% end %>
