@@ -5,6 +5,18 @@ RSpec.describe 'Profile' do
     it 'generates a valid profile' do
       expect(FactoryBot.create(:profile)).to be_valid
     end
+
+    describe 'employee' do
+      it 'generates a profile of an employee' do
+        expect(FactoryBot.create(:employee).is_manager).to eq(false)
+      end
+    end
+
+    describe 'manager' do
+      it 'generates a profile of a manager' do
+        expect(FactoryBot.create(:manager).is_manager).to eq(true)
+      end
+    end
   end
 
   describe 'validations' do
@@ -44,7 +56,7 @@ RSpec.describe 'Profile' do
       end
     end
 
-    describe 'user' do
+describe 'user' do
       it 'is not null' do
         invalid_profile = FactoryBot.build(:profile, user: nil)
         expect(invalid_profile).to_not be_valid
@@ -65,6 +77,22 @@ RSpec.describe 'Profile' do
         invalid_profile = FactoryBot.build(:profile, user: user1)
         expect(invalid_profile).to_not be_valid
         expect { invalid_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+  end
+
+  describe '#is_employee?' do
+    context 'when the profile is a employee' do
+      let(:employee) { FactoryBot.create(:profile, is_manager:) }
+
+      it 'returns true' do
+        expect()
+      end
+    end
+
+    context 'when the profile is a manager' do
+      it 'returns false' do
+        pending
       end
     end
   end
