@@ -1,0 +1,5 @@
+<tr>
+  <td><%= gauge_log.date.to_fs %></td>
+  <td><%= gauge_log.value %></td>
+  <td><%= "Approved by #{gauge_log.approved_by.name}" if gauge_log.approved? %></td>
+</tr>
