@@ -45,6 +45,15 @@ RSpec.describe "Value Logging", type: :system do
       fill_in "add-date-input", with: chosen_date.to_fs
       expect { click_button("Add") }.to_not change(GaugeLog, :count)
     end
+
+    it 'allows me to change a previously logged value' do
+      visit "/gauge/show?id=#{target_gauge.id}"
+
+      chosen_value = 100.5
+      chosen_date = existing_date
+      fill_in "value-input-#{existing_log.id}", with: chosen_value
+      expect { click_button("Update") }.to change { existing_log.reload.value }.to(chosen_value)
+    end
   end
 
   context 'if I am a manager' do
