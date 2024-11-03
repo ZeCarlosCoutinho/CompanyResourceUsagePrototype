@@ -14,14 +14,14 @@ RSpec.describe "Gauges management", type: :system do
   it 'allows me to see all the gauges that exist' do
     visit '/gauge/index'
 
-    within('div#gauge1') do
+    within("div#gauge#{gauge1.id}") do
       expect(page).to have_text(gauge1.name)
       expect(page).to have_text(gauge1.unit)
       expect(page).to have_text(gauge1.start_date.to_fs)
       expect(page).to have_text(gauge1.end_date.to_fs)
     end
 
-    within('div#gauge2') do
+    within("div#gauge#{gauge2.id}") do
       expect(page).to have_text(gauge2.name)
       expect(page).to have_text(gauge2.unit)
       expect(page).to have_text(gauge2.start_date.to_fs)
