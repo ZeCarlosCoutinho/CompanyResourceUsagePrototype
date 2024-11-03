@@ -20,6 +20,8 @@ class GaugeController < ApplicationController
 
     return head :bad_request unless new_gauge.valid?
     new_gauge.save!
+
+    redirect_to "/gauge/index"
   end
 
   def show

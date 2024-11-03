@@ -11,9 +11,9 @@ RSpec.describe GaugeLogController, type: :controller do
     context 'when the user is a manager' do
       let(:current_profile) { FactoryBot.create(:manager) }
 
-      it 'returns a 200' do
+      it 'returns a 302' do
         subject
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
       end
 
       it 'approves the gauge log' do
@@ -80,9 +80,9 @@ RSpec.describe GaugeLogController, type: :controller do
     context 'when the user is an employee' do
       let(:current_profile) { FactoryBot.create(:employee) }
 
-      it 'returns a 200' do
+      it 'returns a 302' do
         subject
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
       end
 
       it 'creates the gauge log' do
@@ -165,9 +165,9 @@ RSpec.describe GaugeLogController, type: :controller do
 
     context 'when the user is an employee' do
       let(:current_profile) { FactoryBot.create(:employee) }
-      it 'returns a 200' do
+      it 'returns a 302' do
         subject
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
       end
 
       it 'updates the log' do
@@ -191,9 +191,9 @@ RSpec.describe GaugeLogController, type: :controller do
           }
         end
 
-        it 'returns a 200' do
+        it 'returns a 302' do
           subject
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(302)
         end
 
         it 'updates the value and date attributes' do

@@ -99,6 +99,7 @@ RSpec.describe "Gauges management", type: :system do
         fill_in "End date", with: Date.today.next_month.to_fs
 
         expect { click_button("Create Gauge") }.to change(Gauge, :count).by(1)
+          .and(change(page, :current_path).to('/gauge/index'))
         new_gauge = Gauge.find_by(name: new_gauge_name)
         expect(new_gauge).to_not be_nil
         expect(new_gauge.unit).to eq(new_gauge_unit)
@@ -148,6 +149,7 @@ RSpec.describe "Gauges management", type: :system do
       expect(page).to have_text(current_gauge.end_date.to_fs)
     end
 
+    # TODO check if they are sorted by date!
     it 'shows me the gauge\'s logs' do
       visit "/gauge/show?id=#{current_gauge.id}"
 
