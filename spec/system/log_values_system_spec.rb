@@ -8,7 +8,7 @@ RSpec.describe "Value Logging", type: :system do
   let(:start_date) { 1.month.ago }
   let(:end_date) { Date.today.next_month }
   let!(:target_gauge) { FactoryBot.create(:gauge, start_date: start_date, end_date: end_date) }
-  
+
   let(:existing_date) { Date.today }
   let!(:existing_log) { FactoryBot.create(:gauge_log, gauge: target_gauge, date: existing_date) }
 
@@ -44,6 +44,18 @@ RSpec.describe "Value Logging", type: :system do
       fill_in "add-value-input", with: chosen_value
       fill_in "add-date-input", with: chosen_date.to_fs
       expect { click_button("Add") }.to_not change(GaugeLog, :count)
+    end
+  end
+
+  context 'if I am a manager' do
+    let(:profile) { FactoryBot.create(:manager) }
+
+    it 'does not allow me to log a value for the gauge' do
+      visit "/gauge/show?id=#{target_gauge.id}"
+
+      expect(page).to_not have_field("add-value-input", type: 'number')
+      expect(page).to_not have_field("add-date-input", type: 'date')
+      expect(page).to_not have_button("Add")
     end
   end
 end
