@@ -106,6 +106,24 @@ RSpec.describe GaugeLogController, type: :controller do
         end
       end
 
+      context 'when there is already another log for that date' do
+        let(:different_value) { value + 1 }
+        let!(:another_log) { FactoryBot.create(:gauge_log, gauge: gauge, date: date, value: different_value) }
+
+        it 'returns a 400' do
+          subject
+          expect(response.status).to eq(400)
+        end
+
+        it 'does not create the log' do
+          expect { subject }.to_not change(GaugeLog.where(date: date), :count)
+        end
+
+        it 'does not substitute the current log for that date' do
+          expect { subject }.to_not change(GaugeLog.find_by(date: date), :value)
+        end
+      end
+
       context 'when the associated gauge does not exist' do
         let(:gauge_id) { -1 }
 
