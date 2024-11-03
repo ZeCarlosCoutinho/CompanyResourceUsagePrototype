@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe GaugeLogController, type: :controller do
-  before(:each) { sign_in current_user }
+  before(:each) { sign_in current_profile.user }
 
   describe 'PATCH approve' do
     let(:target_gauge_log) { FactoryBot.create(:gauge_log) }
@@ -9,7 +9,7 @@ RSpec.describe GaugeLogController, type: :controller do
     subject { patch :approve, params: { id: target_id } }
 
     context 'when the user is a manager' do
-      let(:current_user) { FactoryBot.create(:manager).user }
+      let(:current_profile) { FactoryBot.create(:manager) }
 
       it 'returns a 200' do
         subject
@@ -17,7 +17,7 @@ RSpec.describe GaugeLogController, type: :controller do
       end
 
       it 'approves the gauge log' do
-        expect { subject }.to change { target_gauge_log.reload.approved_by }.from(nil).to(current_user.profile)
+        expect { subject }.to change { target_gauge_log.reload.approved_by }.from(nil).to(current_profile)
       end
 
       context 'and the gauge log is already approved' do
@@ -45,7 +45,7 @@ RSpec.describe GaugeLogController, type: :controller do
     end
 
     context 'when the user is a employee' do
-      let(:current_user) { FactoryBot.create(:employee).user }
+      let(:current_profile) { FactoryBot.create(:employee) }
 
       it 'returns a 403' do
         subject
@@ -78,7 +78,7 @@ RSpec.describe GaugeLogController, type: :controller do
     end
 
     context 'when the user is an employee' do
-      let(:current_user) { FactoryBot.create(:employee).user }
+      let(:current_profile) { FactoryBot.create(:employee) }
 
       it 'returns a 200' do
         subject
@@ -139,7 +139,7 @@ RSpec.describe GaugeLogController, type: :controller do
     end
 
     context 'when the user is a manager' do
-      let(:current_user) { FactoryBot.create(:manager).user }
+      let(:current_profile) { FactoryBot.create(:manager) }
 
       it 'returns a 403' do
         subject
@@ -163,7 +163,7 @@ RSpec.describe GaugeLogController, type: :controller do
     subject { patch :update, params: { gauge_log: { id: target_id, value: target_value, date: target_date } } }
 
     context 'when the user is an employee' do
-      let(:current_user) { FactoryBot.create(:employee).user }
+      let(:current_profile) { FactoryBot.create(:employee) }
       it 'returns a 200' do
         subject
         expect(response.status).to eq(200)
@@ -205,6 +205,11 @@ RSpec.describe GaugeLogController, type: :controller do
             .and(not_change { target_gauge_log.reload.gauge })
         end
       end
+    end
+
+    context 'when the user is a manager' do
+      let(:current_profile) { FactoryBot.create(:manager) }
+
     end
   end
 end
