@@ -137,7 +137,7 @@ RSpec.describe "Gauges management", type: :system do
     let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 10, date: Date.today) }
     let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 20, date: Date.tomorrow) }
 
-    let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile) }
+    let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile, value: 50, date: Date.yesterday) }
 
     it 'shows me the gauge\'s attributes' do
       visit "/gauge/show?id=#{current_gauge.id}"
@@ -155,6 +155,10 @@ RSpec.describe "Gauges management", type: :system do
       expect(page).to have_text(gauge_log1.date.to_fs)
       expect(page).to have_text(gauge_log2.value)
       expect(page).to have_text(gauge_log2.date.to_fs)
+
+      expect(page).to_not have_text(gauge_log_from_another_gauge.value)
+      expect(page).to_not have_text(gauge_log_from_another_gauge.date.to_fs)
+
     end
   end
 end
