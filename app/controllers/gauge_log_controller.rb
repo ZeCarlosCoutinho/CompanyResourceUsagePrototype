@@ -1,6 +1,7 @@
 class GaugeLogController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_managers, only: :approve
+  before_action :disallow_non_employees, only: :create
 
   def create
     new_gauge_log = GaugeLog.new(
@@ -39,5 +40,9 @@ class GaugeLogController < ApplicationController
 
   def disallow_non_managers
     head :forbidden unless current_user.profile.is_manager?
+  end
+
+  def disallow_non_employees
+    head :forbidden unless current_user.profile.is_employee?
   end
 end

@@ -119,5 +119,18 @@ RSpec.describe GaugeLogController, type: :controller do
         end
       end
     end
+
+    context 'when the user is a manager' do
+      let(:current_user) { FactoryBot.create(:manager).user }
+
+      it 'returns a 403' do
+        subject
+        expect(response.status).to eq(403)
+      end
+
+      it 'does not create the gauge log' do
+        expect { subject }.not_to change(GaugeLog, :count)
+      end
+    end
   end
 end
