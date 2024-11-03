@@ -29,6 +29,21 @@ RSpec.describe "Gauges management", type: :system do
     end
   end
 
+  it 'allows me to inspect each gauge' do
+    visit '/gauge/index'
+
+    within("div#gauge#{gauge1.id}") do
+      expect(page).to have_link('Inspect', href: "/gauge/show?id=#{gauge1.id}")
+    end
+
+    within("div#gauge#{gauge2.id}") do
+      expect(page).to have_link('Inspect', href: "/gauge/show?id=#{gauge2.id}")
+    end
+
+    click_link('Inspect', href: "/gauge/show?id=#{gauge2.id}")
+    expect(page).to have_current_path("/gauge/show?id=#{gauge2.id}")
+  end
+
   context 'if I am an employee' do
     let(:employee) { FactoryBot.create(:profile, is_manager: false) }
     subject { employee.user }
