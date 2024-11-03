@@ -1,0 +1,16 @@
+<h1>Create New Gauge</h1>
+<%= form_with model: Gauge.new, url: "/gauge/create" do |form| %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+
+  <%= form.label :unit %>
+  <%= form.text_field :unit %>
+
+  <%= form.label :start_date %>
+  <%= form.date_field :start_date %>
+
+  <%= form.label :end_date %>
+  <%= form.date_field :end_date %>
+
+  <%= form.submit %>
+<% end %>

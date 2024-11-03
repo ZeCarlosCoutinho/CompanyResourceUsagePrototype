@@ -48,7 +48,7 @@ RSpec.describe "Gauges management", type: :system do
     let(:employee) { FactoryBot.create(:profile, is_manager: false) }
     subject { employee.user }
 
-    it 'allows me to create a new gauge' do
+    it 'shows me the option to create a new gauge' do
       visit '/gauge/index'
 
       expect(page).to have_link('New Gauge', href: '/gauge/new')
@@ -66,6 +66,69 @@ RSpec.describe "Gauges management", type: :system do
       visit '/gauge/index'
 
       expect(page).to_not have_link('New Gauge', href: '/gauge/new')
+    end
+  end
+
+  describe 'creating a new gauge' do
+    context 'if I am an employee' do
+      let(:employee) { FactoryBot.create(:employee) }
+      subject { employee.user }
+
+      it 'shows me the page to create a new gauge' do
+        visit '/gauge/new'
+
+        new_gauge_name = "New Test Gauge"
+        new_gauge_unit = "km"
+
+        expect(page).to have_field("Name", type: 'text')
+        expect(page).to have_field("Unit", type: 'text')
+        expect(page).to have_field("Start date", type: 'date')
+        expect(page).to have_field("End date", type: 'date')
+        expect(page).to have_button("Create Gauge")
+      end
+
+      it 'allows me to create a new gauge' do
+        visit '/gauge/new'
+
+        new_gauge_name = "New Test Gauge"
+        new_gauge_unit = "km"
+
+        fill_in "Name", with: new_gauge_name
+        fill_in "Unit", with: new_gauge_unit
+        fill_in "Start date", with: 2.months.ago.to_fs
+        fill_in "End date", with: Date.today.next_month.to_fs
+
+        expect { click_button("Create Gauge") }.to change(Gauge, :count).by(1)
+        new_gauge = Gauge.find_by(name: new_gauge_name)
+        expect(new_gauge).to_not be_nil
+        expect(new_gauge.unit).to eq(new_gauge_unit)
+      end
+
+      it 'returns a 400 if a parameter is invalid' do
+        visit '/gauge/new'
+
+        start_date = 2.months.ago.to_fs
+        invalid_end_date = 3.months.ago.to_fs
+
+        fill_in "Name", with: "New Test Gauge"
+        fill_in "Unit", with: "km"
+        fill_in "Start date", with: start_date
+        fill_in "End date", with: invalid_end_date
+
+        expect { click_button("Create Gauge") }.to_not change(Gauge, :count)
+        expect(page.status_code).to eq(400)
+      end
+    end
+
+    context 'if I am a manager' do
+      let(:manager) { FactoryBot.create(:manager) }
+      subject { manager.user }
+
+      it 'shows me a forbidden page when I try to access the form' do
+        visit '/gauge/new'
+
+        expect(page.status_code).to eq(403)
+      end
     end
   end
 end
