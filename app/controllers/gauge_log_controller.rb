@@ -26,6 +26,12 @@ class GaugeLogController < ApplicationController
   end
 
   def update
+    gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
+
+    gauge_log.update!(
+      value: update_params[:value],
+      date: update_params[:date]
+    )
   end
 
   private
@@ -36,6 +42,10 @@ class GaugeLogController < ApplicationController
 
   def approve_params
     params.permit(:id)
+  end
+
+  def update_params
+    params.require(:gauge_log).permit(:value, :date, :id)
   end
 
   def disallow_non_managers

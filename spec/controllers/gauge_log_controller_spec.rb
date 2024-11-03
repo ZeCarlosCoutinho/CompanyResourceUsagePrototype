@@ -151,4 +151,36 @@ RSpec.describe GaugeLogController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH update' do
+    let(:initial_value) { 42 }
+    let(:initial_date) { Date.today }
+    let(:gauge) { FactoryBot.create(:gauge, start_date: 1.month.ago, end_date: Date.today.next_month) }
+    let(:target_gauge_log) { FactoryBot.create(:gauge_log, value: initial_value, date: initial_date, gauge: gauge) }
+    let(:target_id) { target_gauge_log.id }
+    let(:target_value) { 100.5 }
+    let(:target_date) { Date.tomorrow }
+    subject { patch :update, params: { gauge_log: { id: target_id, value: target_value, date: target_date } } }
+
+    context 'when the user is an employee' do
+      let(:current_user) { FactoryBot.create(:employee).user }
+      it 'returns a 200' do
+        subject
+        expect(response.status).to eq(200)
+      end
+
+      it 'updates the log' do
+        expect { subject }.to change { target_gauge_log.reload.value }.from(initial_value).to(target_value)
+          .and(change { target_gauge_log.reload.date }.from(initial_date).to(target_date))
+      end
+
+      context 'and it tries to update other values besides value and date' do
+        it 'updates the value and date attributes' do
+        end
+
+        it 'does not update the other attributes' do
+        end
+      end
+    end
+  end
 end
