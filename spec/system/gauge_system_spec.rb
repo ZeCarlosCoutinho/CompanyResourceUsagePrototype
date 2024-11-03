@@ -193,5 +193,26 @@ RSpec.describe "Gauges management", type: :system do
         end
       end
     end
+
+    # TODO What if a gauge does not exist?
+  end
+
+  describe 'approving a gauge log of a gauge' do
+    let(:current_gauge) { gauge1 }
+    let(:manager) { FactoryBot.create(:manager) }
+    subject { manager.user }
+    let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: manager, value: 10, date: Date.today) }
+    let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: manager, value: 20, date: Date.tomorrow) }
+
+    it 'allows me to approve a gauge log' do
+      visit "/gauge/show?id=#{current_gauge.id}"
+
+      within("#gauge-log-row#{gauge_log1.id}") do
+        expect { click_button("Approve") }.to change { gauge_log1.reload.approved_by }.from(nil).to(manager)
+      end
+    end
+    # TODO what if already approved?
+    # TODO What if user is not a manager?
+    # TODO what if gauge log does not exist?
   end
 end
