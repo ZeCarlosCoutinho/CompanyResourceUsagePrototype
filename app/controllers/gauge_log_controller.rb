@@ -28,6 +28,8 @@ class GaugeLogController < ApplicationController
   def update
     gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
 
+    return head :not_found if gauge_log.blank?
+
     gauge_log.update!(
       value: update_params[:value],
       date: update_params[:date]

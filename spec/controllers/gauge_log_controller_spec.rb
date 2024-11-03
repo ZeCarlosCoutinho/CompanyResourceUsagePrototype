@@ -205,6 +205,15 @@ RSpec.describe GaugeLogController, type: :controller do
             .and(not_change { target_gauge_log.reload.gauge })
         end
       end
+
+      context 'and the target log does not exist' do
+        let(:target_id) { -1 }
+
+        it 'returns a 404' do
+          subject
+          expect(response.status).to eq(404)
+        end
+      end
     end
 
     context 'when the user is a manager' do
