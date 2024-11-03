@@ -109,7 +109,7 @@ RSpec.describe "Gauges management", type: :system do
       let(:manager) { FactoryBot.create(:manager) }
       subject { manager.user }
 
-      it 'shows me a forbidden page' do
+      it 'shows me a forbidden page when I try to access the form' do
         visit '/gauge/new'
 
         expect(page.status_code).to eq(403)
