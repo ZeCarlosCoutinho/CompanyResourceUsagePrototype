@@ -16,4 +16,13 @@ RSpec.describe "Navigation", type: :system do
       expect { click_button "Log out" }.to change(page, :current_path).to("/users/sign_in")
     end
   end
+
+  context 'when I am in the create gauge page' do
+    it 'allows me to go back to the gauge list' do
+      visit "/gauge/new"
+
+      expect(page).to have_link("Back")
+      expect { click_link "Back" }.to change(page, :current_path).to("/gauge/index")
+    end
+  end
 end
