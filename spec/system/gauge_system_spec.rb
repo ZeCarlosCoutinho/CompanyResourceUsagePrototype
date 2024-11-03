@@ -230,8 +230,16 @@ RSpec.describe "Gauges management", type: :system do
         end
       end
     end
-    # TODO what if already approved?
-    # TODO What if user is not a manager?
+
+    context 'if I am an employee' do
+      subject { employee.user }
+
+      it 'does not allow me to approve a gauge log' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        expect(page).to_not have_button("Approve")
+      end
+    end
     # TODO what if gauge log does not exist?
   end
 end
