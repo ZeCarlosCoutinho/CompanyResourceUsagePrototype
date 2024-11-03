@@ -210,6 +210,15 @@ RSpec.describe GaugeLogController, type: :controller do
     context 'when the user is a manager' do
       let(:current_profile) { FactoryBot.create(:manager) }
 
+      it 'returns a 403' do
+        subject
+        expect(response.status).to eq(403)
+      end
+
+      it 'does not change the gauge log' do
+        expect { subject }.to not_change { target_gauge_log.reload.value }
+            .and(not_change { target_gauge_log.reload.date })
+      end
     end
   end
 end

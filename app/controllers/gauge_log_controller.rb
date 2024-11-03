@@ -1,7 +1,7 @@
 class GaugeLogController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_managers, only: :approve
-  before_action :disallow_non_employees, only: :create
+  before_action :disallow_non_employees, only: %i[create update]
 
   def create
     new_gauge_log = GaugeLog.new(
