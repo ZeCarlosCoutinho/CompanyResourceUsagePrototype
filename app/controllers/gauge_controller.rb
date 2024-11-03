@@ -18,7 +18,7 @@ class GaugeController < ApplicationController
       end_date: create_params[:end_date]
     )
 
-    # head :bad_request unless new_gauge.is_valid?
+    return head :bad_request unless new_gauge.valid?
     new_gauge.save!
   end
 

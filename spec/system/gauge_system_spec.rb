@@ -103,6 +103,21 @@ RSpec.describe "Gauges management", type: :system do
         expect(new_gauge).to_not be_nil
         expect(new_gauge.unit).to eq(new_gauge_unit)
       end
+
+      it 'returns a 400 if a parameter is invalid' do
+        visit '/gauge/new'
+
+        start_date = 2.months.ago.to_fs
+        invalid_end_date = 3.months.ago.to_fs
+
+        fill_in "Name", with: "New Test Gauge"
+        fill_in "Unit", with: "km"
+        fill_in "Start date", with: start_date
+        fill_in "End date", with: invalid_end_date
+
+        expect { click_button("Create Gauge") }.to_not change(Gauge, :count)
+        expect(page.status_code).to eq(400)
+      end
     end
 
     context 'if I am a manager' do
