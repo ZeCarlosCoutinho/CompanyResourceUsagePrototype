@@ -1,3 +1,4 @@
+<%= button_to 'Log out', destroy_user_session_path, method: :delete %>
 <h1>Gauges</h1>
 <%= render partial: "gauge", collection: @gauges %>
 <%= link_to "New Gauge", controller: 'gauge', action: 'new' unless current_user.profile.is_manager %>
