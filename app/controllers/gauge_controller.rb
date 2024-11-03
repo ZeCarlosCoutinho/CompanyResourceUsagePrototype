@@ -1,12 +1,12 @@
 class GaugeController < ApplicationController
   before_action :authenticate_user!
+  before_action :disallow_non_employees, only: %i[new create]
 
   def index
     @gauges = Gauge.all
   end
 
   def new
-    head :forbidden unless current_user.profile.is_employee?
   end
 
   def create
@@ -29,5 +29,9 @@ class GaugeController < ApplicationController
 
   def create_params
     params.require(:gauge).permit(:name, :unit, :start_date, :end_date)
+  end
+
+  def disallow_non_employees
+    head :forbidden unless current_user.profile.is_employee?
   end
 end
