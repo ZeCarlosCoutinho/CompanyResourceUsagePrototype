@@ -93,10 +93,15 @@ RSpec.describe GaugeLogController, type: :controller do
       end
 
       context 'when the params are invalid' do
+        let(:date) { start_date - 1.month }
+
         it 'returns a 400' do
+          subject
+          expect(response.status).to eq(400)
         end
 
         it 'does not create the gauge log' do
+          expect { subject }.not_to change(GaugeLog, :count)
         end
       end
     end

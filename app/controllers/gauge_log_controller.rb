@@ -9,6 +9,9 @@ class GaugeLogController < ApplicationController
       gauge: Gauge.find_by(id: create_params[:gauge_id]),
       filled_in_by: current_user.profile
     )
+
+    return head :bad_request unless new_gauge_log.valid?
+
     new_gauge_log.save!
   end
 
