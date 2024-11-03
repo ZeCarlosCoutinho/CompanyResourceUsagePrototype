@@ -1,4 +1,6 @@
 class GaugeController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     @gauges = Gauge.all
   end

@@ -7,6 +7,9 @@ RSpec.describe "Gauges management", type: :system do
 
   let!(:gauge1) { FactoryBot.create(:gauge, name: "Gauge1", unit: "kWh", start_date: 1.month.ago, end_date: Date.today.next_month) }
   let!(:gauge2) { FactoryBot.create(:gauge, name: "Gauge2", unit: "L", start_date: 2.months.ago, end_date: Date.today.next_month) }
+  let!(:profile) { FactoryBot.create(:profile) }
+  subject { profile.user }
+  before(:each) { sign_in(subject) }
 
   it 'allows me to see all the gauges that exist' do
     visit '/gauge/index'
@@ -28,8 +31,7 @@ RSpec.describe "Gauges management", type: :system do
 
   context 'if I am an employee' do
     let(:employee) { FactoryBot.create(:profile, is_manager: false) }
-
-    before(:each) { sign_in(employee.user) }
+    subject { employee.user }
 
     it 'allows me to create a new gauge' do
       visit '/gauge/index'
@@ -38,6 +40,17 @@ RSpec.describe "Gauges management", type: :system do
       click_link 'New Gauge'
 
       expect(page).to have_current_path('/gauge/new')
+    end
+  end
+
+  context 'if I am a manager' do
+    let(:manager) { FactoryBot.create(:profile, is_manager: true) }
+    subject { manager.user }
+
+    it 'allows me to create a new gauge' do
+      visit '/gauge/index'
+
+      expect(page).to_not have_link('New Gauge', href: '/gauge/new')
     end
   end
 end
