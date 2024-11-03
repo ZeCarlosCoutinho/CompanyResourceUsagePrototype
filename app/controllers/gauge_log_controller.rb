@@ -3,6 +3,13 @@ class GaugeLogController < ApplicationController
   before_action :disallow_non_managers, only: :approve
 
   def create
+    new_gauge_log = GaugeLog.new(
+      value: create_params[:value],
+      date: Date.parse(create_params[:date]),
+      gauge: Gauge.find_by(id: create_params[:gauge_id]),
+      filled_in_by: current_user.profile
+    )
+    new_gauge_log.save!
   end
 
   def approve
@@ -18,6 +25,10 @@ class GaugeLogController < ApplicationController
   end
 
   private
+
+  def create_params
+    params.require(:gauge_log).permit(:value, :date, :gauge_id)
+  end
 
   def approve_params
     params.permit(:id)
