@@ -1,0 +1,9 @@
+<div id=<%= "gauge#{gauge.id}" %>>
+  <h3><%= gauge.name %></h3>
+  <ul>
+    <li>Units: <%= gauge.unit %></li>
+    <li>Start Date: <%= gauge.start_date.to_fs %></li>
+    <li>End Date: <%= gauge.end_date.to_fs %></li>
+  </ul>
+  <%= link_to 'Inspect', controller: 'gauge', action: 'show', id: gauge.id %>
+</div>
