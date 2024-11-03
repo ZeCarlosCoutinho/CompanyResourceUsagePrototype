@@ -66,5 +66,12 @@ RSpec.describe "Value Logging", type: :system do
       expect(page).to_not have_field("add-date-input", type: 'date')
       expect(page).to_not have_button("Add")
     end
+
+    it 'does not allow me to edit a value for a log' do
+      visit "/gauge/show?id=#{target_gauge.id}"
+
+      # TODO This test is not very specific, we should improve it in the future
+      expect(page).to_not have_button("Update")
+    end
   end
 end
