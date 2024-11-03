@@ -101,4 +101,22 @@ RSpec.describe GaugeLog, type: :model do
       end
     end
   end
+
+  describe 'approved?' do
+    let(:manager) { FactoryBot.create(:manager) }
+    let(:approved_log) { FactoryBot.create(:gauge_log, approved_by: manager) }
+    let(:not_approved_log) { FactoryBot.create(:gauge_log) }
+
+    context 'when a manager has approved it' do
+      it 'returns true' do
+        expect(approved_log.approved?).to eq(true)
+      end
+    end
+
+    context 'when a manager has not yet approved it' do
+      it 'returns false' do
+        expect(not_approved_log.approved?).to eq(false)
+      end
+    end
+  end
 end
