@@ -6,6 +6,7 @@ class GaugeController < ApplicationController
   end
 
   def new
+    head :forbidden unless current_user.profile.is_employee?
   end
 
   def show

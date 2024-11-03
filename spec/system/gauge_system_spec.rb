@@ -48,7 +48,7 @@ RSpec.describe "Gauges management", type: :system do
     let(:employee) { FactoryBot.create(:profile, is_manager: false) }
     subject { employee.user }
 
-    it 'allows me to create a new gauge' do
+    it 'shows me the option to create a new gauge' do
       visit '/gauge/index'
 
       expect(page).to have_link('New Gauge', href: '/gauge/new')
@@ -66,6 +66,37 @@ RSpec.describe "Gauges management", type: :system do
       visit '/gauge/index'
 
       expect(page).to_not have_link('New Gauge', href: '/gauge/new')
+    end
+  end
+
+  describe 'creating a new gauge' do
+    context 'if I am an employee' do
+      let(:employee) { FactoryBot.create(:employee) }
+      subject { employee.user }
+
+      it 'shows me the page to create a new gauge' do
+        visit '/gauge/new'
+
+        new_gauge_name = "New Test Gauge"
+        new_gauge_unit = "km"
+
+        expect(page).to have_field("Name", type: 'text')
+        expect(page).to have_field("Unit", type: 'text')
+        expect(page).to have_field("Start Date", type: 'date')
+        expect(page).to have_field("End Date", type: 'date')
+        expect(page).to have_button("Create New Gauge")
+      end
+    end
+
+    context 'if I am a manager' do
+      let(:manager) { FactoryBot.create(:manager) }
+      subject { manager.user }
+
+      it 'shows me a forbidden page' do
+        visit '/gauge/new'
+
+        expect(page.status_code).to eq(403)
+      end
     end
   end
 end
