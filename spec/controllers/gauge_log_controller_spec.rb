@@ -153,9 +153,10 @@ RSpec.describe GaugeLogController, type: :controller do
   end
 
   describe 'PATCH update' do
+    let(:min_date) { 1.month.ago }
     let(:initial_value) { 42 }
     let(:initial_date) { Date.today }
-    let(:gauge) { FactoryBot.create(:gauge, start_date: 1.month.ago, end_date: Date.today.next_month) }
+    let(:gauge) { FactoryBot.create(:gauge, start_date: min_date, end_date: Date.today.next_month) }
     let(:target_gauge_log) { FactoryBot.create(:gauge_log, value: initial_value, date: initial_date, gauge: gauge) }
     let(:target_id) { target_gauge_log.id }
     let(:target_value) { 100.5 }
@@ -212,6 +213,20 @@ RSpec.describe GaugeLogController, type: :controller do
         it 'returns a 404' do
           subject
           expect(response.status).to eq(404)
+        end
+      end
+
+      context 'and it tries to update the log with invalid parameters' do
+        let(:target_date) { min_date - 1.day }
+
+        it 'returns a 400' do
+          subject
+          expect(response.status).to eq(400)
+        end
+
+        it 'does not update any attributes of the log' do
+          expect { subject }.to not_change { target_gauge_log.reload.value }
+            .and(not_change { target_gauge_log.reload.date })
         end
       end
     end
