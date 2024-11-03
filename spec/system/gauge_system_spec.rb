@@ -133,13 +133,28 @@ RSpec.describe "Gauges management", type: :system do
   end
 
   describe 'inspecting a gauge' do
-    it 'shows me the gauge\'s attributes' do
-      visit "/gauge/show?id=#{gauge1.id}"
+    let(:current_gauge) { gauge1 }
+    let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 10, date: Date.today) }
+    let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 20, date: Date.tomorrow) }
 
-      expect(page).to have_text(gauge1.name)
-      expect(page).to have_text(gauge1.unit)
-      expect(page).to have_text(gauge1.start_date.to_fs)
-      expect(page).to have_text(gauge1.end_date.to_fs)
+    let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile) }
+
+    it 'shows me the gauge\'s attributes' do
+      visit "/gauge/show?id=#{current_gauge.id}"
+
+      expect(page).to have_text(current_gauge.name)
+      expect(page).to have_text(current_gauge.unit)
+      expect(page).to have_text(current_gauge.start_date.to_fs)
+      expect(page).to have_text(current_gauge.end_date.to_fs)
+    end
+
+    it 'shows me the gauge\'s logs' do
+      visit "/gauge/show?id=#{current_gauge.id}"
+
+      expect(page).to have_text(gauge_log1.value)
+      expect(page).to have_text(gauge_log1.date.to_fs)
+      expect(page).to have_text(gauge_log2.value)
+      expect(page).to have_text(gauge_log2.date.to_fs)
     end
   end
 end
