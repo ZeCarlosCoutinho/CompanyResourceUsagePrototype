@@ -5,7 +5,7 @@ class GaugeLogController < ApplicationController
 
   def create
     new_gauge_log = GaugeLog.new(
-      value: create_params[:value],
+      value: create_params[:value].to_f,
       date: Date.parse(create_params[:date]),
       gauge: Gauge.find_by(id: create_params[:gauge_id]),
       filled_in_by: current_user.profile
