@@ -83,16 +83,18 @@ describe 'user' do
 
   describe '#is_employee?' do
     context 'when the profile is a employee' do
-      let(:employee) { FactoryBot.create(:profile, is_manager:) }
+      let(:employee) { FactoryBot.create(:employee) }
 
       it 'returns true' do
-        expect()
+        expect(employee.is_employee?).to eq(true)
       end
     end
 
     context 'when the profile is a manager' do
+      let(:manager) { FactoryBot.create(:manager) }
+
       it 'returns false' do
-        pending
+        expect(manager.is_employee?).to eq(false)
       end
     end
   end
