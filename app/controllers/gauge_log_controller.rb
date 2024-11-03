@@ -14,6 +14,7 @@ class GaugeLogController < ApplicationController
     return head :bad_request unless new_gauge_log.valid?
 
     new_gauge_log.save!
+    redirect_back_or_to "/gauge/index"
   end
 
   def approve
@@ -23,6 +24,7 @@ class GaugeLogController < ApplicationController
     return head :bad_request if gauge_log.approved?
 
     gauge_log.approve!(current_user.profile)
+    redirect_back_or_to "/gauge/index"
   end
 
   def update
@@ -36,6 +38,7 @@ class GaugeLogController < ApplicationController
     return head :bad_request unless gauge_log.valid?
 
     gauge_log.save!
+    redirect_back_or_to "/gauge/index"
   end
 
   private
