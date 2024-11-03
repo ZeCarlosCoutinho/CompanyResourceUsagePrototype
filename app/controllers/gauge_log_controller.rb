@@ -6,7 +6,7 @@ class GaugeLogController < ApplicationController
 
   def approve
     gauge_log = GaugeLog.find(approve_params[:id].to_i)
-    gauge_log.approve!(current_user.profile)
+    gauge_log.approve!(current_user.profile) unless gauge_log.approved?
   end
 
   def update

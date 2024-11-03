@@ -200,15 +200,34 @@ RSpec.describe "Gauges management", type: :system do
   describe 'approving a gauge log of a gauge' do
     let(:current_gauge) { gauge1 }
     let(:manager) { FactoryBot.create(:manager) }
-    subject { manager.user }
-    let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: manager, value: 10, date: Date.today) }
-    let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: manager, value: 20, date: Date.tomorrow) }
+    let(:employee) { FactoryBot.create(:employee) }
+    let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: employee, value: 10, date: Date.today) }
+    let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: employee, value: 20, date: Date.tomorrow) }
 
-    it 'allows me to approve a gauge log' do
-      visit "/gauge/show?id=#{current_gauge.id}"
+    context 'if I am a manager' do
+      subject { manager.user }
 
-      within("#gauge-log-row#{gauge_log1.id}") do
-        expect { click_button("Approve") }.to change { gauge_log1.reload.approved_by }.from(nil).to(manager)
+      it 'allows me to approve a gauge log' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        within("#gauge-log-row#{gauge_log1.id}") do
+          expect { click_button("Approve") }.to change { gauge_log1.reload.approved_by }.from(nil).to(manager)
+        end
+      end
+
+      context 'and the gauge log I am trying to approve was already approved' do
+        let(:target_gauge_log) { gauge_log1 }
+        let(:another_manager) { FactoryBot.create(:manager) }
+
+        before(:each) { target_gauge_log.approve!(another_manager) }
+
+        it 'does not approve the gauge log' do
+          visit "/gauge/show?id=#{current_gauge.id}"
+
+          within("#gauge-log-row#{target_gauge_log.id}") do
+            expect { click_button("Approve") }.not_to change { target_gauge_log.reload.approved_by }
+          end
+        end
       end
     end
     # TODO what if already approved?
