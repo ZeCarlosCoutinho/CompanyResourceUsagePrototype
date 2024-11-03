@@ -1,0 +1,14 @@
+<h1><%= @gauge.name %></h1>
+<div>Units: <%= @gauge.unit %></div>
+<div>Start Date: <%= @gauge.start_date.to_fs %></div>
+<div>End Date: <%= @gauge.end_date.to_fs %></div>
+<div id='gauge-logs-section'>
+  <table>
+    <tr>
+      <th>Time of logging</th>
+      <th>Value</th>
+      <th>Approved status</th>
+    </tr>
+    <%= render partial: "gauge_log", collection: @gauge.gauge_logs %>
+  </table>
+</div>

@@ -16,6 +16,10 @@ class GaugeLog < ApplicationRecord
     update(approved_by: profile)
   end
 
+  def approved?
+    approved_by.present?
+  end
+
   private
 
   def no_duplicates
