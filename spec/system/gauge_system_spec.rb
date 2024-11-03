@@ -82,9 +82,9 @@ RSpec.describe "Gauges management", type: :system do
 
         expect(page).to have_field("Name", type: 'text')
         expect(page).to have_field("Unit", type: 'text')
-        expect(page).to have_field("Start Date", type: 'date')
-        expect(page).to have_field("End Date", type: 'date')
-        expect(page).to have_button("Create New Gauge")
+        expect(page).to have_field("Start date", type: 'date')
+        expect(page).to have_field("End date", type: 'date')
+        expect(page).to have_button("Create Gauge")
       end
     end
 
