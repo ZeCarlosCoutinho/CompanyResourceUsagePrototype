@@ -23,12 +23,17 @@ class GaugeController < ApplicationController
   end
 
   def show
+    @gauge = Gauge.find(show_params[:id])
   end
 
   private
 
   def create_params
     params.require(:gauge).permit(:name, :unit, :start_date, :end_date)
+  end
+
+  def show_params
+    params.permit(:id)
   end
 
   def disallow_non_employees

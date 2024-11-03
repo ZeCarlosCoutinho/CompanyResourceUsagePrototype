@@ -131,4 +131,15 @@ RSpec.describe "Gauges management", type: :system do
       end
     end
   end
+
+  describe 'inspecting a gauge' do
+    it 'shows me the gauge\'s attributes' do
+      visit "/gauge/show?id=#{gauge1.id}"
+
+      expect(page).to have_text(gauge1.name)
+      expect(page).to have_text(gauge1.unit)
+      expect(page).to have_text(gauge1.start_date.to_fs)
+      expect(page).to have_text(gauge1.end_date.to_fs)
+    end
+  end
 end
