@@ -86,6 +86,23 @@ RSpec.describe "Gauges management", type: :system do
         expect(page).to have_field("End date", type: 'date')
         expect(page).to have_button("Create Gauge")
       end
+
+      it 'allows me to create a new gauge' do
+        visit '/gauge/new'
+
+        new_gauge_name = "New Test Gauge"
+        new_gauge_unit = "km"
+
+        fill_in "Name", with: new_gauge_name
+        fill_in "Unit", with: new_gauge_unit
+        fill_in "Start date", with: 2.months.ago.to_fs
+        fill_in "End date", with: Date.today.next_month.to_fs
+
+        expect { click_button("Create Gauge") }.to change(Gauge, :count).by(1)
+        new_gauge = Gauge.find_by(name: new_gauge_name)
+        expect(new_gauge).to_not be_nil
+        expect(new_gauge.unit).to eq(new_gauge_unit)
+      end
     end
 
     context 'if I am a manager' do
