@@ -175,10 +175,34 @@ RSpec.describe GaugeLogController, type: :controller do
       end
 
       context 'and it tries to update other values besides value and date' do
+        let(:manager) { FactoryBot.create(:manager) }
+        let(:another_gauge) { FactoryBot.create(:gauge) }
+
+        subject do
+          patch :update, params: {
+            gauge_log: {
+              id: target_id,
+              value: target_value,
+              date: target_date,
+              approved_by: manager,
+              gauge: another_gauge
+            }
+          }
+        end
+
+        it 'returns a 200' do
+          subject
+          expect(response.status).to eq(200)
+        end
+
         it 'updates the value and date attributes' do
+          expect { subject }.to change { target_gauge_log.reload.value }.from(initial_value).to(target_value)
+            .and(change { target_gauge_log.reload.date }.from(initial_date).to(target_date))
         end
 
         it 'does not update the other attributes' do
+          expect { subject }.to not_change { target_gauge_log.reload.approved_by }
+            .and(not_change { target_gauge_log.reload.gauge })
         end
       end
     end
