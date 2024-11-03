@@ -24,6 +24,7 @@ class GaugeController < ApplicationController
 
   def show
     @gauge = Gauge.find(show_params[:id])
+    @profile = current_user.profile
   end
 
   private

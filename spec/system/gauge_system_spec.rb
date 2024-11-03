@@ -137,7 +137,7 @@ RSpec.describe "Gauges management", type: :system do
     let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 10, date: Date.today) }
     let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: profile, value: 20, date: Date.tomorrow) }
 
-    let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile) }
+    let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile, value: 50, date: Date.yesterday) }
 
     it 'shows me the gauge\'s attributes' do
       visit "/gauge/show?id=#{current_gauge.id}"
@@ -155,6 +155,91 @@ RSpec.describe "Gauges management", type: :system do
       expect(page).to have_text(gauge_log1.date.to_fs)
       expect(page).to have_text(gauge_log2.value)
       expect(page).to have_text(gauge_log2.date.to_fs)
+
+      expect(page).to_not have_text(gauge_log_from_another_gauge.value)
+      expect(page).to_not have_text(gauge_log_from_another_gauge.date.to_fs)
     end
+
+    context 'if I am a manager' do
+      subject { FactoryBot.create(:manager).user }
+
+      it 'shows me an approve button for each gauge log of this gauge' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        within("#gauge-log-row#{gauge_log1.id}") do
+          expect(page).to have_button("Approve")
+        end
+
+        within("#gauge-log-row#{gauge_log2.id}") do
+          expect(page).to have_button("Approve")
+        end
+
+        expect(page).to_not have_selector("#gauge-log-row#{gauge_log_from_another_gauge.id}")
+      end
+    end
+
+    context 'if I am an employee' do
+      subject { FactoryBot.create(:employee).user }
+
+      it 'does not show any approve buttons' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        within("#gauge-log-row#{gauge_log1.id}") do
+          expect(page).to_not have_button("Approve")
+        end
+
+        within("#gauge-log-row#{gauge_log2.id}") do
+          expect(page).to_not have_button("Approve")
+        end
+      end
+    end
+
+    # TODO What if a gauge does not exist?
+  end
+
+  describe 'approving a gauge log of a gauge' do
+    let(:current_gauge) { gauge1 }
+    let(:manager) { FactoryBot.create(:manager) }
+    let(:employee) { FactoryBot.create(:employee) }
+    let!(:gauge_log1) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: employee, value: 10, date: Date.today) }
+    let!(:gauge_log2) { FactoryBot.create(:gauge_log, gauge: current_gauge, filled_in_by: employee, value: 20, date: Date.tomorrow) }
+
+    context 'if I am a manager' do
+      subject { manager.user }
+
+      it 'allows me to approve a gauge log' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        within("#gauge-log-row#{gauge_log1.id}") do
+          expect { click_button("Approve") }.to change { gauge_log1.reload.approved_by }.from(nil).to(manager)
+        end
+      end
+
+      context 'and the gauge log I am trying to approve was already approved' do
+        let(:target_gauge_log) { gauge_log1 }
+        let(:another_manager) { FactoryBot.create(:manager) }
+
+        before(:each) { target_gauge_log.approve!(another_manager) }
+
+        it 'does not approve the gauge log' do
+          visit "/gauge/show?id=#{current_gauge.id}"
+
+          within("#gauge-log-row#{target_gauge_log.id}") do
+            expect { click_button("Approve") }.not_to change { target_gauge_log.reload.approved_by }
+          end
+        end
+      end
+    end
+
+    context 'if I am an employee' do
+      subject { employee.user }
+
+      it 'does not allow me to approve a gauge log' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        expect(page).to_not have_button("Approve")
+      end
+    end
+    # TODO what if gauge log does not exist?
   end
 end

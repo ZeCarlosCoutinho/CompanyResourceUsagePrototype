@@ -8,7 +8,8 @@
       <th>Time of logging</th>
       <th>Value</th>
       <th>Approved status</th>
+      <th>Actions</th>
     </tr>
-    <%= render partial: "gauge_log", collection: @gauge.gauge_logs %>
+    <%= render partial: "gauge_log", collection: @gauge.gauge_logs, locals: { profile: @profile } %>
   </table>
 </div>
