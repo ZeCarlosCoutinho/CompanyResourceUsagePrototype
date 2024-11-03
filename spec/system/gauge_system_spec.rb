@@ -158,8 +158,11 @@ RSpec.describe "Gauges management", type: :system do
 
       expect(page).to_not have_text(gauge_log_from_another_gauge.value)
       expect(page).to_not have_text(gauge_log_from_another_gauge.date.to_fs)
+    end
 
     context 'if I am a manager' do
+      subject { FactoryBot.create(:manager).user }
+
       it 'shows me an approve button for each gauge log of this gauge' do
         visit "/gauge/show?id=#{current_gauge.id}"
 
@@ -173,7 +176,22 @@ RSpec.describe "Gauges management", type: :system do
 
         expect(page).to_not have_selector("#gauge-log-row#{gauge_log_from_another_gauge.id}")
       end
+    end
 
+    context 'if I am an employee' do
+      subject { FactoryBot.create(:employee).user }
+
+      it 'does not show any approve buttons' do
+        visit "/gauge/show?id=#{current_gauge.id}"
+
+        within("#gauge-log-row#{gauge_log1.id}") do
+          expect(page).to_not have_button("Approve")
+        end
+
+        within("#gauge-log-row#{gauge_log2.id}") do
+          expect(page).to_not have_button("Approve")
+        end
+      end
     end
   end
 end
