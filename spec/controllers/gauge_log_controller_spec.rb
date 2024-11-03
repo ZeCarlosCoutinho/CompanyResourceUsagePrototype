@@ -43,5 +43,18 @@ RSpec.describe GaugeLogController, type: :controller do
         end
       end
     end
+
+    context 'when the user is a employee' do
+      let(:current_user) { FactoryBot.create(:employee).user }
+
+      it 'returns a 403' do
+        subject
+        expect(response.status).to eq(403)
+      end
+
+      it 'does not approve the log' do
+        expect { subject }.not_to change { target_gauge_log.reload.approved_by }
+      end
+    end
   end
 end
