@@ -50,9 +50,12 @@ RSpec.describe "Value Logging", type: :system do
       visit "/gauge/show?id=#{target_gauge.id}"
 
       chosen_value = 100.5
-      chosen_date = existing_date
+      chosen_date = existing_date + 1.day
       fill_in "value-input-#{existing_log.id}", with: chosen_value
-      expect { click_button("Update") }.to change { existing_log.reload.value }.to(chosen_value)
+      expect { click_button("Update Value") }.to change { existing_log.reload.value }.to(chosen_value)
+
+      fill_in "date-input-#{existing_log.id}", with: chosen_date
+      expect { click_button("Update Date") }.to change { existing_log.reload.date }.to(chosen_date)
     end
   end
 
