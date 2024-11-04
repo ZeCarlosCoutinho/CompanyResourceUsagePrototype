@@ -245,6 +245,34 @@ RSpec.describe GaugeLogController, type: :controller do
             .and(not_change { target_gauge_log.reload.date })
         end
       end
+
+      context 'when the value is missing' do
+        let(:target_value) { nil }
+
+        it 'returns a 302' do
+          subject
+          expect(response.status).to eq(302)
+        end
+
+        it 'still updates the date of the log' do
+          expect { subject }.to change { target_gauge_log.reload.date }.from(initial_date).to(target_date)
+            .and(not_change { target_gauge_log.reload.value })
+        end
+      end
+
+      context 'when the date is missing' do
+        let(:target_date) { nil }
+
+        it 'returns a 302' do
+          subject
+          expect(response.status).to eq(302)
+        end
+
+        it 'still updates the value of the log' do
+          expect { subject }.to change { target_gauge_log.reload.value }.from(initial_value).to(target_value)
+            .and(not_change { target_gauge_log.reload.date })
+        end
+      end
     end
 
     context 'when the user is a manager' do
