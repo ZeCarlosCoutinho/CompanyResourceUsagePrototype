@@ -136,7 +136,7 @@ These were the desired controller actions during the planning phase.
   - Update
   - Approve
 
-## General log
+## General dev log
 
 Installed Rails locally.
 Generated a Rails project using the Rails utility.
@@ -145,9 +145,12 @@ Setup Docker with Postgres
   Had some issues here with starting Docker given the production configs.
 Setup Devise
 Setup RSpec and FactoryBot
-  Having some hiccups here with automatic import of factories. Solved by using rspec-rails instead of rspec
+  Having some hiccups here with automatic import of factories.
+  Solved by using rspec-rails instead of rspec
 Implementing the User and Profile model
-  Having issues with DB cleaning before/after the tests. Solved by adding the DatabaseCleaner gem.
+  Having issues with DB cleaning before/after the tests.
+  Solved by adding the DatabaseCleaner gem.
+(After this point I stopped recording more logs. It went mostly smoothly, implementing controllers and views)
 
 ## Plan
 
