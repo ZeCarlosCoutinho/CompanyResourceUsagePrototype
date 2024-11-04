@@ -153,13 +153,13 @@ RSpec.describe "Gauges management", type: :system do
     it 'shows me the gauge\'s logs' do
       visit "/gauge/show?id=#{current_gauge.id}"
 
-      expect(page).to have_text(gauge_log1.value)
-      expect(page).to have_text(gauge_log1.date.to_fs)
-      expect(page).to have_text(gauge_log2.value)
-      expect(page).to have_text(gauge_log2.date.to_fs)
+      expect(page).to have_css("input[value=\"#{gauge_log1.value}\"]")
+      expect(page).to have_css("input[value=\"#{gauge_log1.date.to_fs}\"]")
+      expect(page).to have_css("input[value=\"#{gauge_log2.value}\"]")
+      expect(page).to have_css("input[value=\"#{gauge_log2.date.to_fs}\"]")
 
-      expect(page).to_not have_text(gauge_log_from_another_gauge.value)
-      expect(page).to_not have_text(gauge_log_from_another_gauge.date.to_fs)
+      expect(page).to_not have_css("input[value=\"#{gauge_log_from_another_gauge.value}\"]")
+      expect(page).to_not have_css("input[value=\"#{gauge_log_from_another_gauge.date.to_fs}\"]")
     end
 
     context 'if I am a manager' do
