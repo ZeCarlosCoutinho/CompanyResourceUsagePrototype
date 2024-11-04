@@ -227,7 +227,7 @@ RSpec.describe "Gauges management", type: :system do
           visit "/gauge/show?id=#{current_gauge.id}"
 
           within("#gauge-log-row#{target_gauge_log.id}") do
-            expect { click_button("Approve") }.not_to change { target_gauge_log.reload.approved_by }
+            expect(page).to_not have_button("Approve")
           end
         end
       end
