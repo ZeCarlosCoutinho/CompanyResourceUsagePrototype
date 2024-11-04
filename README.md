@@ -30,7 +30,9 @@ POSTGRES_HOST=db
 
 1. Run `docker compose up`, to start the system.
 2. Run `bin/be rails db:seed`, to populate the database with test accounts.
-3. Go go `localhost` on your browswer, to try the website
+3. Go go `localhost` on your browser, to try the website.
+
+You can find the credentials for the test accounts in `db/seeds.rb`.
 
 If you want to make changes to the files and have the server restart automatically, then use `docker compose watch` instead in step 1.
 
