@@ -30,7 +30,9 @@ POSTGRES_HOST=db
 
 1. Run `docker compose up`, to start the system.
 2. Run `bin/be rails db:seed`, to populate the database with test accounts.
-3. Go go `localhost` on your browswer, to try the website
+3. Go go `localhost` on your browser, to try the website.
+
+You can find the credentials for the test accounts in `db/seeds.rb`.
 
 If you want to make changes to the files and have the server restart automatically, then use `docker compose watch` instead in step 1.
 
@@ -136,7 +138,7 @@ These were the desired controller actions during the planning phase.
   - Update
   - Approve
 
-## General log
+## General dev log
 
 Installed Rails locally.
 Generated a Rails project using the Rails utility.
@@ -145,9 +147,12 @@ Setup Docker with Postgres
   Had some issues here with starting Docker given the production configs.
 Setup Devise
 Setup RSpec and FactoryBot
-  Having some hiccups here with automatic import of factories. Solved by using rspec-rails instead of rspec
+  Having some hiccups here with automatic import of factories.
+  Solved by using rspec-rails instead of rspec
 Implementing the User and Profile model
-  Having issues with DB cleaning before/after the tests. Solved by adding the DatabaseCleaner gem.
+  Having issues with DB cleaning before/after the tests.
+  Solved by adding the DatabaseCleaner gem.
+(After this point I stopped recording more logs. It went mostly smoothly, implementing controllers and views)
 
 ## Plan
 
