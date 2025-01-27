@@ -28,7 +28,7 @@ class GaugeLogsController < ApplicationController
   end
 
   def update
-    gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
+    gauge_log = GaugeLog.find_by(id: params[:id].to_i)
 
     return head :not_found if gauge_log.blank?
     return head :bad_request if gauge_log.approved?
@@ -52,7 +52,7 @@ class GaugeLogsController < ApplicationController
   end
 
   def update_params
-    params.require(:gauge_log).permit(:value, :date, :id)
+    params.require(:gauge_log).permit(:value, :date)
   end
 
   def disallow_non_managers
