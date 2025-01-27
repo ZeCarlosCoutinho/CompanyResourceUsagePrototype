@@ -1,4 +1,4 @@
-class GaugeController < ApplicationController
+class GaugesController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_employees, only: %i[new create]
 
