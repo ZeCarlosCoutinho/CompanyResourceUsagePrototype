@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   devise_for :users
+
+  resources :gauge_logs, only: %i[create update] do
+    patch "approve", on: :member
+  end
   get "gauge/index"
   get "gauge/new"
   get "gauge/show"
   post "gauge/create"
-  patch "gauge_log/approve"
-  post "gauge_log/create"
-  patch "gauge_log/update"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
