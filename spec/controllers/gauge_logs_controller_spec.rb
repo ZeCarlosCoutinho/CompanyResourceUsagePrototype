@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GaugeLogController, type: :controller do
+RSpec.describe GaugeLogsController, type: :controller do
   before(:each) { sign_in current_profile.user }
 
   describe 'PATCH approve' do

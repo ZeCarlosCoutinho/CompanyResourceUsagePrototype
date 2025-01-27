@@ -1,4 +1,4 @@
-class GaugeLogController < ApplicationController
+class GaugeLogsController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_managers, only: :approve
   before_action :disallow_non_employees, only: %i[create update]
