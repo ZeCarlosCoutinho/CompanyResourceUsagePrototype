@@ -1,4 +1,4 @@
-<%= form_with model: GaugeLog.new, url: "/gauge_logs/create" do |form| %>
+<%= form_with model: GaugeLog.new do |form| %>
   <%= form.label :value %>
   <%= form.number_field :value, id: 'add-value-input' %>
 
