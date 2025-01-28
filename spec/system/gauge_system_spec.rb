@@ -12,7 +12,7 @@ RSpec.describe "Gauges management", type: :system do
   before(:each) { sign_in(subject) }
 
   it 'allows me to see all the gauges that exist' do
-    visit '/gauge/index'
+    visit '/gauges'
 
     within("div#gauge#{gauge1.id}") do
       expect(page).to have_text(gauge1.name)
@@ -30,18 +30,18 @@ RSpec.describe "Gauges management", type: :system do
   end
 
   it 'allows me to inspect each gauge' do
-    visit '/gauge/index'
+    visit '/gauges'
 
     within("div#gauge#{gauge1.id}") do
-      expect(page).to have_link('Inspect', href: "/gauge/show?id=#{gauge1.id}")
+      expect(page).to have_link('Inspect', href: "/gauges/#{gauge1.id}")
     end
 
     within("div#gauge#{gauge2.id}") do
-      expect(page).to have_link('Inspect', href: "/gauge/show?id=#{gauge2.id}")
+      expect(page).to have_link('Inspect', href: "/gauges/#{gauge2.id}")
     end
 
-    click_link('Inspect', href: "/gauge/show?id=#{gauge2.id}")
-    expect(page).to have_current_path("/gauge/show?id=#{gauge2.id}")
+    click_link('Inspect', href: "/gauges/#{gauge2.id}")
+    expect(page).to have_current_path("/gauges/#{gauge2.id}")
   end
 
   context 'if I am an employee' do
@@ -49,12 +49,12 @@ RSpec.describe "Gauges management", type: :system do
     subject { employee.user }
 
     it 'shows me the option to create a new gauge' do
-      visit '/gauge/index'
+      visit '/gauges'
 
-      expect(page).to have_link('New Gauge', href: '/gauge/new')
+      expect(page).to have_link('New Gauge', href: '/gauges/new')
       click_link 'New Gauge'
 
-      expect(page).to have_current_path('/gauge/new')
+      expect(page).to have_current_path('/gauges/new')
     end
   end
 
@@ -63,9 +63,9 @@ RSpec.describe "Gauges management", type: :system do
     subject { manager.user }
 
     it 'allows me to create a new gauge' do
-      visit '/gauge/index'
+      visit '/gauges'
 
-      expect(page).to_not have_link('New Gauge', href: '/gauge/new')
+      expect(page).to_not have_link('New Gauge', href: '/gauges/new')
     end
   end
 
@@ -75,7 +75,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { employee.user }
 
       it 'shows me the page to create a new gauge' do
-        visit '/gauge/new'
+        visit '/gauges/new'
 
         new_gauge_name = "New Test Gauge"
         new_gauge_unit = "km"
@@ -88,7 +88,7 @@ RSpec.describe "Gauges management", type: :system do
       end
 
       it 'allows me to create a new gauge' do
-        visit '/gauge/new'
+        visit '/gauges/new'
 
         new_gauge_name = "New Test Gauge"
         new_gauge_unit = "km"
@@ -99,14 +99,14 @@ RSpec.describe "Gauges management", type: :system do
         fill_in "End date", with: Date.today.next_month.to_fs
 
         expect { click_button("Create Gauge") }.to change(Gauge, :count).by(1)
-          .and(change(page, :current_path).to('/gauge/index'))
+          .and(change(page, :current_path).to('/gauges'))
         new_gauge = Gauge.find_by(name: new_gauge_name)
         expect(new_gauge).to_not be_nil
         expect(new_gauge.unit).to eq(new_gauge_unit)
       end
 
       it 'returns a 400 if a parameter is invalid' do
-        visit '/gauge/new'
+        visit '/gauges/new'
 
         start_date = 2.months.ago.to_fs
         invalid_end_date = 3.months.ago.to_fs
@@ -126,7 +126,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { manager.user }
 
       it 'shows me a forbidden page when I try to access the form' do
-        visit '/gauge/new'
+        visit '/gauges/new'
 
         expect(page.status_code).to eq(403)
       end
@@ -141,7 +141,7 @@ RSpec.describe "Gauges management", type: :system do
     let!(:gauge_log_from_another_gauge) { FactoryBot.create(:gauge_log, gauge: gauge2, filled_in_by: profile, value: 50, date: Date.yesterday) }
 
     it 'shows me the gauge\'s attributes' do
-      visit "/gauge/show?id=#{current_gauge.id}"
+      visit "/gauges/#{current_gauge.id}"
 
       expect(page).to have_text(current_gauge.name)
       expect(page).to have_text(current_gauge.unit)
@@ -151,7 +151,7 @@ RSpec.describe "Gauges management", type: :system do
 
     # TODO check if they are sorted by date!
     it 'shows me the gauge\'s logs' do
-      visit "/gauge/show?id=#{current_gauge.id}"
+      visit "/gauges/#{current_gauge.id}"
 
       expect(page).to have_css("input[value=\"#{gauge_log1.value}\"]")
       expect(page).to have_css("input[value=\"#{gauge_log1.date.to_fs}\"]")
@@ -166,7 +166,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { FactoryBot.create(:manager).user }
 
       it 'shows me an approve button for each gauge log of this gauge' do
-        visit "/gauge/show?id=#{current_gauge.id}"
+        visit "/gauges/#{current_gauge.id}"
 
         within("#gauge-log-row#{gauge_log1.id}") do
           expect(page).to have_button("Approve")
@@ -184,7 +184,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { FactoryBot.create(:employee).user }
 
       it 'does not show any approve buttons' do
-        visit "/gauge/show?id=#{current_gauge.id}"
+        visit "/gauges/#{current_gauge.id}"
 
         within("#gauge-log-row#{gauge_log1.id}") do
           expect(page).to_not have_button("Approve")
@@ -210,7 +210,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { manager.user }
 
       it 'allows me to approve a gauge log' do
-        visit "/gauge/show?id=#{current_gauge.id}"
+        visit "/gauges/#{current_gauge.id}"
 
         within("#gauge-log-row#{gauge_log1.id}") do
           expect { click_button("Approve") }.to change { gauge_log1.reload.approved_by }.from(nil).to(manager)
@@ -224,7 +224,7 @@ RSpec.describe "Gauges management", type: :system do
         before(:each) { target_gauge_log.approve!(another_manager) }
 
         it 'does not approve the gauge log' do
-          visit "/gauge/show?id=#{current_gauge.id}"
+          visit "/gauges/#{current_gauge.id}"
 
           within("#gauge-log-row#{target_gauge_log.id}") do
             expect(page).to_not have_button("Approve")
@@ -237,7 +237,7 @@ RSpec.describe "Gauges management", type: :system do
       subject { employee.user }
 
       it 'does not allow me to approve a gauge log' do
-        visit "/gauge/show?id=#{current_gauge.id}"
+        visit "/gauges/#{current_gauge.id}"
 
         expect(page).to_not have_button("Approve")
       end
