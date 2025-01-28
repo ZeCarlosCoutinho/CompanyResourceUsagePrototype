@@ -100,7 +100,16 @@ RSpec.describe GaugesController, type: :controller do
     end
 
     context 'when the user is not authorized to create a gauge' do
-      # TODO
+      let(:current_profile) { FactoryBot.create(:manager) }
+
+      it 'return 403' do
+        subject
+        expect(response).to have_http_status(403)
+      end
+
+      it 'does not create a gauge' do
+        expect { subject }.to_not change(Gauge, :count)
+      end
     end
   end
 end
