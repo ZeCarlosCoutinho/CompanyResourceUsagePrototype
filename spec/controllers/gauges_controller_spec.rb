@@ -63,12 +63,12 @@ RSpec.describe GaugesController, type: :controller do
       } }
     end
 
-    context 'when all the parameters are valid' do
-      let(:unit) { 'testunit' }
-      let(:name) { 'testname' }
-      let(:start_date) { Time.zone.yesterday }
-      let(:end_date) { Time.zone.today }
+    let(:unit) { 'testunit' }
+    let(:name) { 'testname' }
+    let(:start_date) { Time.zone.yesterday }
+    let(:end_date) { Time.zone.today }
 
+    context 'when all the parameters are valid' do
       it 'returns a 302 status code' do
         subject
         expect(response).to have_http_status(302)
@@ -86,13 +86,16 @@ RSpec.describe GaugesController, type: :controller do
     context 'when some of the parameters are invalid' do
       # All the gauge parameter validations are tested in the model specs.
       # The controller specs only test if the controller returns the appropriate response when invalid.
+      let(:start_date) { Time.zone.today }
+      let(:end_date) { Time.zone.yesterday }
 
       it 'returns a 400 status code' do
-        # TODO
+        subject
+        expect(response).to have_http_status(400)
       end
 
       it 'does not create a gauge' do
-        # TODO
+        expect { subject }.to_not change(Gauge, :count)
       end
     end
 
