@@ -5,6 +5,8 @@ RSpec.describe GaugesController, type: :controller do
 
   describe 'GET index' do
     render_views
+    let(:current_profile) { FactoryBot.create(:manager) }
+
     let(:unit1) { 'testunit' }
     let(:name1) { 'testname' }
     let(:timeslot1) { Gauge.time_slots[:daily] }
@@ -31,7 +33,6 @@ RSpec.describe GaugesController, type: :controller do
                                 end_date: end_date2)
     end
 
-    let(:current_profile) { FactoryBot.create(:manager) }
     subject { get "index" }
 
     it 'returns a 200 status code' do
@@ -51,6 +52,56 @@ RSpec.describe GaugesController, type: :controller do
       expect(rendered_html).to match(/<li>Units: #{unit2}<\/li>/)
       expect(rendered_html).to match(/<li>Start Date: #{start_date2}<\/li>/)
       expect(rendered_html).to match(/<li>End Date: #{end_date2}<\/li>/)
+    end
+  end
+
+  describe 'POST create' do
+    let(:current_profile) { FactoryBot.create(:employee) }
+
+    subject do
+      post "create", params: { gauge: {
+        unit: unit,
+        name: name,
+        start_date: start_date,
+        end_date: end_date
+      } }
+    end
+
+    context 'when all the parameters are valid' do
+      let(:unit) { 'testunit' }
+      let(:name) { 'testname' }
+      let(:start_date) { Time.zone.yesterday }
+      let(:end_date) { Time.zone.today }
+
+      it 'returns a 302 status code' do
+        subject
+        expect(response).to have_http_status(302)
+      end
+
+      it 'creates a gauge' do
+        expect { subject }.to change(Gauge, :count).from(0).to(1)
+        created_gauge = Gauge.find_by(name: name)
+        expect(created_gauge.unit).to eq(unit)
+        expect(created_gauge.start_date).to eq(start_date)
+        expect(created_gauge.end_date).to eq(end_date)
+      end
+    end
+
+    context 'when some of the parameters are invalid' do
+      # All the gauge parameter validations are tested in the model specs.
+      # The controller specs only test if the controller returns the appropriate response when invalid.
+
+      it 'returns a 400 status code' do
+        # TODO
+      end
+
+      it 'does not create a gauge' do
+        # TODO
+      end
+    end
+
+    context 'when the user is not authorized to create a gauge' do
+      # TODO
     end
   end
 end
