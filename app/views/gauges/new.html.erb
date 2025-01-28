@@ -1,6 +1,6 @@
 <%= link_to 'Back', "/gauges" %>
 <h1>Create New Gauge</h1>
-<%= form_with model: Gauge.new, url: "/gauges/create" do |form| %>
+<%= form_with model: Gauge.new do |form| %>
   <%= form.label :name %>
   <%= form.text_field :name %>
 
