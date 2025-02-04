@@ -64,6 +64,12 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_USER: user
           POSTGRES_DB: test_db
+    env:
+      POSTGRES_DATABASE: test_db
+      POSTGRES_USERNAME: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips sqlite3
@@ -77,14 +83,12 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Run migrations
+        run: bin/rails db:migrate
+
       - name: Run tests
         env:
           RAILS_ENV: test
-          POSTGRES_DATABASE: test_db
-          POSTGRES_USERNAME: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
         run: bin/rspec
 
       - name: Keep screenshots from failed system tests
