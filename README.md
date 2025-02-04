@@ -24,6 +24,7 @@ POSTGRES_DATABASE=<db_name>
 POSTGRES_USERNAME=<db_username>
 POSTGRES_PASSWORD=<db_password>
 POSTGRES_HOST=db
+POSTGRES_PORT=<db_port>
 ```
 
 ## Running the system

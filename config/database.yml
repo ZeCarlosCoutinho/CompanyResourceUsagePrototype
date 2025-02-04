@@ -9,7 +9,7 @@ default: &default
   database: <%= ENV['POSTGRES_DATABASE'] %>
   username: <%= ENV['POSTGRES_USERNAME'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>
-  port: 5432
+  port: <%= ENV['POSTGRES_PORT'] %>
   host: <%= ENV['POSTGRES_HOST'] %>
   timeout: 5000
 
