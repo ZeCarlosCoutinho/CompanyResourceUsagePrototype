@@ -4,14 +4,14 @@
   <td><%= "Approved by #{gauge_log.approved_by.name}" %></td>
 <% else %>
   <td>
-    <%= form_with model: gauge_log, url: "/gauge_log/update" do |form| %>
+    <%= form_with model: gauge_log, method: :patch do |form| %>
       <%= form.hidden_field :id %>
       <%= form.date_field :date , id: "date-input-#{gauge_log.id}"%>
       <%= form.submit "Update Date" %>
     <% end %>
   </td>
   <td>
-      <%= form_with model: gauge_log, url: "/gauge_log/update" do |form| %>
+      <%= form_with model: gauge_log, method: :patch do |form| %>
       <%= form.hidden_field :id %>
       <%= form.number_field :value , id: "value-input-#{gauge_log.id}"%>
       <%= form.submit "Update Value" %>

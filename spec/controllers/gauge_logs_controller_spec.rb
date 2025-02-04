@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GaugeLogController, type: :controller do
+RSpec.describe GaugeLogsController, type: :controller do
   before(:each) { sign_in current_profile.user }
 
   describe 'PATCH approve' do
@@ -161,7 +161,7 @@ RSpec.describe GaugeLogController, type: :controller do
     let(:target_id) { target_gauge_log.id }
     let(:target_value) { 100.5 }
     let(:target_date) { Date.tomorrow }
-    subject { patch :update, params: { gauge_log: { id: target_id, value: target_value, date: target_date } } }
+    subject { patch :update, params: { id: target_id, gauge_log: { value: target_value, date: target_date } } }
 
     context 'when the user is an employee' do
       let(:current_profile) { FactoryBot.create(:employee) }
@@ -181,8 +181,8 @@ RSpec.describe GaugeLogController, type: :controller do
 
         subject do
           patch :update, params: {
+            id: target_id,
             gauge_log: {
-              id: target_id,
               value: target_value,
               date: target_date,
               approved_by: manager,

@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   devise_for :users
-  get "gauge/index"
-  get "gauge/new"
-  get "gauge/show"
-  post "gauge/create"
-  patch "gauge_log/approve"
-  post "gauge_log/create"
-  patch "gauge_log/update"
+
+  resources :gauge_logs, only: %i[create update] do
+    patch "approve", on: :member
+  end
+  resources :gauges, only: %i[index new create show]
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -18,5 +16,5 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  root to: "gauge#index"
+  root to: "gauges#index"
 end

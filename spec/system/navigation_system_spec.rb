@@ -10,7 +10,7 @@ RSpec.describe "Navigation", type: :system do
 
   context 'when I am in the gauges list page' do
     it 'allows me to log out' do
-      visit "/gauge/index"
+      visit "/gauges"
 
       expect(page).to have_button("Log out")
       expect { click_button "Log out" }.to change(page, :current_path).to("/users/sign_in")
@@ -19,20 +19,20 @@ RSpec.describe "Navigation", type: :system do
 
   context 'when I am in the create gauge page' do
     it 'allows me to go back to the gauge list' do
-      visit "/gauge/new"
+      visit "/gauges/new"
 
       expect(page).to have_link("Back")
-      expect { click_link "Back" }.to change(page, :current_path).to("/gauge/index")
+      expect { click_link "Back" }.to change(page, :current_path).to("/gauges")
     end
   end
 
   context 'when I am in the gauge page' do
     let!(:gauge) { FactoryBot.create(:gauge) }
     it 'allows me to go back to the gauge list' do
-      visit "/gauge/show?id=#{gauge.id}"
+      visit "/gauges/#{gauge.id}"
 
       expect(page).to have_link("Back")
-      expect { click_link "Back" }.to change(page, :current_path).to("/gauge/index")
+      expect { click_link "Back" }.to change(page, :current_path).to("/gauges")
     end
   end
 end

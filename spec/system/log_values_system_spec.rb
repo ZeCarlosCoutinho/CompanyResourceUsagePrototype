@@ -19,7 +19,7 @@ RSpec.describe "Value Logging", type: :system do
     let(:profile) { FactoryBot.create(:employee) }
 
     it 'allows me to log a value for a gauge' do
-      visit "/gauge/show?id=#{target_gauge.id}"
+      visit "/gauges/#{target_gauge.id}"
 
       expect(page).to have_field("add-value-input", type: 'number')
       expect(page).to have_field("add-date-input", type: 'date')
@@ -37,7 +37,7 @@ RSpec.describe "Value Logging", type: :system do
     end
 
     it 'does not allow to log a value for a date that already has a log' do
-      visit "/gauge/show?id=#{target_gauge.id}"
+      visit "/gauges/#{target_gauge.id}"
 
       chosen_value = 42
       chosen_date = existing_date
@@ -47,7 +47,7 @@ RSpec.describe "Value Logging", type: :system do
     end
 
     it 'allows me to change a previously logged value' do
-      visit "/gauge/show?id=#{target_gauge.id}"
+      visit "/gauges/#{target_gauge.id}"
 
       chosen_value = 100.5
       chosen_date = existing_date + 1.day
@@ -63,7 +63,7 @@ RSpec.describe "Value Logging", type: :system do
     let(:profile) { FactoryBot.create(:manager) }
 
     it 'does not allow me to log a value for the gauge' do
-      visit "/gauge/show?id=#{target_gauge.id}"
+      visit "/gauges/#{target_gauge.id}"
 
       expect(page).to_not have_field("add-value-input", type: 'number')
       expect(page).to_not have_field("add-date-input", type: 'date')
@@ -71,7 +71,7 @@ RSpec.describe "Value Logging", type: :system do
     end
 
     it 'does not allow me to edit a value for a log' do
-      visit "/gauge/show?id=#{target_gauge.id}"
+      visit "/gauges/#{target_gauge.id}"
 
       # TODO This test is not very specific, we should improve it in the future
       expect(page).to_not have_button("Update")

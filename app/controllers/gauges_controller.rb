@@ -1,4 +1,4 @@
-class GaugeController < ApplicationController
+class GaugesController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_employees, only: %i[new create]
 
@@ -21,7 +21,7 @@ class GaugeController < ApplicationController
     return head :bad_request unless new_gauge.valid?
     new_gauge.save!
 
-    redirect_to "/gauge/index"
+    redirect_to "/gauges"
   end
 
   def show

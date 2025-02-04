@@ -1,4 +1,4 @@
-class GaugeLogController < ApplicationController
+class GaugeLogsController < ApplicationController
   before_action :authenticate_user!
   before_action :disallow_non_managers, only: :approve
   before_action :disallow_non_employees, only: %i[create update]
@@ -14,7 +14,7 @@ class GaugeLogController < ApplicationController
     return head :bad_request unless new_gauge_log.valid?
 
     new_gauge_log.save!
-    redirect_back_or_to "/gauge/index"
+    redirect_back_or_to "/gauges"
   end
 
   def approve
@@ -24,11 +24,11 @@ class GaugeLogController < ApplicationController
     return head :bad_request if gauge_log.approved?
 
     gauge_log.approve!(current_user.profile)
-    redirect_back_or_to "/gauge/index"
+    redirect_back_or_to "/gauges"
   end
 
   def update
-    gauge_log = GaugeLog.find_by(id: update_params[:id].to_i)
+    gauge_log = GaugeLog.find_by(id: params[:id].to_i)
 
     return head :not_found if gauge_log.blank?
     return head :bad_request if gauge_log.approved?
@@ -38,7 +38,7 @@ class GaugeLogController < ApplicationController
     return head :bad_request unless gauge_log.valid?
 
     gauge_log.save!
-    redirect_back_or_to "/gauge/index"
+    redirect_back_or_to "/gauges"
   end
 
   private
@@ -52,7 +52,7 @@ class GaugeLogController < ApplicationController
   end
 
   def update_params
-    params.require(:gauge_log).permit(:value, :date, :id)
+    params.require(:gauge_log).permit(:value, :date)
   end
 
   def disallow_non_managers
