@@ -55,13 +55,15 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
-    # services:
-    #  redis:
-    #    image: redis
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    services:
+      postgres:
+        image: postgres:17.0-bookworm
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_USER: user
+          POSTGRES_DB: test_db
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips sqlite3
@@ -78,7 +80,10 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          # REDIS_URL: redis://localhost:6379/0
+          POSTGRES_DATABASE: test_db
+          POSTGRES_USERNAME: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: localhost:5432
         run: bin/rspec
 
       - name: Keep screenshots from failed system tests
